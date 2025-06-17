@@ -7,7 +7,7 @@ import textwrap
 from datetime import datetime
 from werkzeug.utils import secure_filename
 from chatbot import get_response, load_intents, expecting_pdf_text
-from vercel_wsgi import handle_request  # ✅ import vercel-wsgi
+from vercel_wsgi import handle_request  # ✅ Key for Vercel deployment
 
 app = Flask(__name__)
 app.secret_key = 'secret'
@@ -23,7 +23,7 @@ intents = load_intents()
 @app.route('/')
 def index():
     return render_template('index.html')
-    
+
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -108,8 +108,7 @@ def apply_filters():
         as_attachment=True,
         download_name=edited_filename
     )
-    
-from vercel_wsgi import make_lambda_handler
 
+# ✅ Required handler for Vercel
 def handler(environ, start_response):
     return handle_request(app, environ, start_response)

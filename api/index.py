@@ -112,4 +112,4 @@ def apply_filters():
         download_name=edited_filename
     )
 
-app.wsgi_app = ProxyFix(app.wsgi_app)
+app = app

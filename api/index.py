@@ -49,7 +49,7 @@ def chat():
 
     chat_history.append(f"User: {user_input}")
     chat_history.append(f"Chotu: {bot_response}")
-    return render_template("index.html", bot_response=bot_response)
+    return render_template("../templates/index.html", bot_response=bot_response)
 
 @app.route('/upload_image', methods=['POST'])
 def upload_image():

@@ -1,4 +1,4 @@
-flask
-fpdf
-pillow
-vercel-wsgi
+flask==2.3.3
+fpdf==1.7.2
+pillow==10.3.0
+werkzeug==2.3.7

@@ -6,8 +6,8 @@ import os
 import textwrap
 from datetime import datetime
 from werkzeug.utils import secure_filename
-from werkzeug.middleware.proxy_fix import ProxyFix
 from chatbot import get_response, load_intents, expecting_pdf_text
+from vercel_wsgi import handle_request  # ✅ import vercel-wsgi
 
 app = Flask(__name__)
 app.secret_key = 'secret'
@@ -23,7 +23,7 @@ intents = load_intents()
 @app.route('/')
 def index():
     return render_template('index.html')
-
+    
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -111,5 +111,5 @@ def apply_filters():
     
 from vercel_wsgi import make_lambda_handler
 
-app.wsgi_app = ProxyFix(app.wsgi_app)
-handler = make_lambda_handler(app)
+def handler(environ, start_response):
+    return handle_request(app, environ, start_response)

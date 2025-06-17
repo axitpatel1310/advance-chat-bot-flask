@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Image</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Image: {{ filename }}</h1>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <div class="image-display">
+            <img src="{{ image_url }}" alt="Uploaded Image" id="currentImage">
+        </div>
+
+        <form action="/apply_filters" method="post" class="filter-form">
+            <input type="hidden" name="filename" value="{{ filename }}">
+
+            <div class="filter-group">
+                <label for="contrast">Contrast:</label>
+                <input type="range" id="contrast" name="contrast" min="0" max="3" step="0.05" value="1.0"> (0-3x)
+            </div>
+
+            <div class="filter-group">
+                <label for="brightness">Brightness:</label>
+                <input type="range" id="brightness" name="brightness" min="0" max="3" step="0.05" value="1.0"> (0-3x)
+            </div>
+
+            <div class="filter-group">
+                <label for="grayscale">Grayscale:</label>
+                <input type="checkbox" id="grayscale" name="grayscale">
+            </div>
+
+            <div class="filter-group">
+                <label for="blur">Blur Radius:</label>
+                <input type="range" id="blur" name="blur" min="0" max="10" step="0.5" value="0.0"> (0-10px)
+            </div>
+
+            <div class="filter-group">
+                <label for="rotate">Rotate:</label>
+                <select id="rotate" name="rotate">
+                    <option value="0">None</option>
+                    <option value="90">90° Clockwise</option>
+                    <option value="-90">90° Counter-Clockwise</option>
+                    <option value="180">180°</option>
+                </select>
+            </div>
+
+            <button type="submit">Apply Filters</button>
+        </form>
+
+        {% if processed_filename %}
+            <p>Your edited image:</p>
+            <div class="image-display">
+                <img src="{{ url_for('uploaded_file', folder='processed', filename=processed_filename) }}" alt="Processed Image">
+            </div>
+            <p><a href="{{ download_link }}" download>Download Edited Image</a></p>
+        {% endif %}
+
+        <p><a href="{{ url_for('index') }}">Go back to main page</a></p>
+    </div>
+</body>
+</html>

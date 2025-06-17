@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Chotu</h1>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <div class="sections-container">
+            <div class="section chatbot-section">
+                <h2>Chat with Assistant (PDF Creator)</h2>
+                <div class="chat-window">
+                    {% if bot_response %}
+                        <p><strong>Chotu:</strong> {{ bot_response }}</p>
+                    {% else %}
+                        <p><strong>Chotu:</strong> Hi! I'm your AI assistant. I can create PDFs from text. Just say 'create pdf'.</p>
+                    {% endif %}
+                </div>
+                <form action="/chat" method="post" class="chat-form">
+                    <textarea type="text" name="user_input" placeholder="Type your message..." required></textarea>
+                    <button type="submit">Send</button>
+                </form>
+                {% if pdf_link %}
+                    <p><a href="{{ pdf_link }}" download>Download Your PDF</a></p>
+                {% endif %}
+            </div>
+
+            <div class="section image-editor-section">
+                <h2>Image Editor</h2>
+                <p>Upload an image to apply filters.</p>
+                <form action="/upload_image" method="post" enctype="multipart/form-data" class="image-upload-form">
+                    <input type="file" name="file" accept="image/*" required>
+                    <button type="submit">Upload Image</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

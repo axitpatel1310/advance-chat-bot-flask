@@ -108,9 +108,8 @@ def apply_filters():
         as_attachment=True,
         download_name=edited_filename
     )
+    
+from vercel_wsgi import make_lambda_handler
 
-# Vercel handler
 app.wsgi_app = ProxyFix(app.wsgi_app)
-
-def handler(environ, start_response):
-    return app(environ, start_response)
+handler = make_lambda_handler(app)

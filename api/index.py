@@ -106,9 +106,10 @@ def apply_filters():
         download_name=edited_filename
     )
 
-# ✅ FINAL AND REQUIRED PART FOR VERCEL
-# Create a handler using vercel_wsgi
-from vercel_wsgi import handle_request
+if __name__ == "__main__":
+    app.run()
 
-def handler(environ, start_response):
-    return handle_request(app, environ, start_response)
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+app.wsgi_app = ProxyFix(app.wsgi_app)
+app = app  # expose app for Vercel

@@ -114,5 +114,4 @@ def apply_filters():
 
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
-if __name__ == "__main__":
-    app.run()
+app = app  # for Vercel to detect the WSGI app

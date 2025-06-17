@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "builds": [
     {
       "src": "api/index.py",
@@ -8,7 +9,12 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "gunicorn -w 1 api.index:app"
+      "dest": "api/index.py"
     }
-  ]
+  ],
+  "functions": {
+    "api/index.py": {
+      "runtime": "python3.9"
+    }
+  }
 }

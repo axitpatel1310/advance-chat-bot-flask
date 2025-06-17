@@ -1,6 +1,6 @@
 import json
 import re
-from pdf_generator import generate_pdf  # Correct import
+from api.pdf_generator import generate_pdf  # Correct import
 import random
 import os
 import datetime

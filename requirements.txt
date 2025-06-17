@@ -1,6 +1,4 @@
 flask
-Pillow
-werkzeug
 fpdf
-Pillow
-nltk
+pillow
+vercel-wsgi

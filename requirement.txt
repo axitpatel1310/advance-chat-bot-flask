@@ -1,4 +1,6 @@
+Pillow
+werkzeug
 flask
 fpdf
 Pillow
-werkzeug
+nltk

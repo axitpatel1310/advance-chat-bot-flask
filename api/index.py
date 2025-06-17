@@ -7,7 +7,9 @@ import textwrap
 from datetime import datetime
 from werkzeug.utils import secure_filename
 from chatbot import get_response, load_intents, expecting_pdf_text
-from vercel_wsgi import handle_request  # ✅ Key for Vercel deployment
+
+import sys
+sys.path.append('.')  # in case local modules aren't loading
 
 app = Flask(__name__)
 app.secret_key = 'secret'
@@ -19,11 +21,9 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 chat_history = []
 intents = load_intents()
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -50,7 +50,6 @@ def chat():
     chat_history.append(f"Chotu: {bot_response}")
     return render_template("index.html", bot_response=bot_response)
 
-
 @app.route('/upload_image', methods=['POST'])
 def upload_image():
     file = request.files['file']
@@ -63,12 +62,10 @@ def upload_image():
     flash("No file uploaded.")
     return redirect(url_for('index'))
 
-
 @app.route('/edit/<filename>')
 def edit_image(filename):
     image_url = url_for('static', filename=f'uploads/{filename}')
     return render_template('edit_image.html', filename=filename, image_url=image_url)
-
 
 @app.route('/apply_filters', methods=['POST'])
 def apply_filters():
@@ -109,6 +106,9 @@ def apply_filters():
         download_name=edited_filename
     )
 
-# ✅ Required handler for Vercel
+# ✅ FINAL AND REQUIRED PART FOR VERCEL
+# Create a handler using vercel_wsgi
+from vercel_wsgi import handle_request
+
 def handler(environ, start_response):
     return handle_request(app, environ, start_response)

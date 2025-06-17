@@ -113,5 +113,3 @@ def apply_filters():
     )
 
 app.wsgi_app = ProxyFix(app.wsgi_app)
-
-app = app  # for Vercel to detect the WSGI app

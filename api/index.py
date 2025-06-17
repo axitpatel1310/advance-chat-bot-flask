@@ -6,6 +6,7 @@ import os
 import textwrap
 from datetime import datetime
 from werkzeug.utils import secure_filename
+from werkzeug.middleware.proxy_fix import ProxyFix
 from chatbot import get_response, load_intents, expecting_pdf_text
 
 import sys
@@ -14,7 +15,7 @@ sys.path.append('.')  # in case local modules aren't loading
 app = Flask(__name__)
 app.secret_key = 'secret'
 
-UPLOAD_FOLDER = 'static/uploads'
+UPLOAD_FOLDER = '/tmp/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -62,9 +63,14 @@ def upload_image():
     flash("No file uploaded.")
     return redirect(url_for('index'))
 
+@app.route('/uploads/<filename>')
+def serve_uploaded_file(filename):
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    return send_file(filepath)
+
 @app.route('/edit/<filename>')
 def edit_image(filename):
-    image_url = url_for('static', filename=f'uploads/{filename}')
+    image_url = url_for('serve_uploaded_file', filename=filename)
     return render_template('edit_image.html', filename=filename, image_url=image_url)
 
 @app.route('/apply_filters', methods=['POST'])
@@ -106,10 +112,7 @@ def apply_filters():
         download_name=edited_filename
     )
 
+app.wsgi_app = ProxyFix(app.wsgi_app)
+
 if __name__ == "__main__":
     app.run()
-
-from werkzeug.middleware.proxy_fix import ProxyFix
-
-app.wsgi_app = ProxyFix(app.wsgi_app)
-app = app  # expose app for Vercel
